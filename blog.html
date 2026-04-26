@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI.INSIGHTS | Futuristic Tech Blog</title>
+    <!-- Modern Tech Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS VARIABLES --- */
+        :root {
+            --bg-base: #030303;
+            --grid-color: rgba(255, 255, 255, 0.03);
+            --neon-yellow: #ffea00;
+            --neon-white: #ffffff;
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --card-bg: rgba(15, 15, 15, 0.6);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* --- GLOBAL RESETS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- LUXURY AI BACKGROUND ANIMATIONS --- */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background-color: var(--bg-base);
+        }
+
+        /* Subtle Grid Lines */
+        .bg-grid {
+            position: absolute;
+            inset: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 60px 60px;
+            transform: perspective(500px) rotateX(45deg) translateY(-100px) translateZ(-200px);
+            animation: gridMove 20s linear infinite;
+        }
+
+        /* Flowing Golden Light */
+        .bg-light {
+            position: absolute;
+            width: 150vw;
+            height: 150vh;
+            background: radial-gradient(circle at center, rgba(255, 234, 0, 0.06) 0%, rgba(255, 255, 255, 0.02) 30%, transparent 60%);
+            top: -25%;
+            left: -25%;
+            animation: flowLight 15s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        /* Glowing Particles */
+        .particles-container {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--neon-white);
+            border-radius: 50%;
+            box-shadow: 0 0 12px 2px var(--neon-yellow);
+            opacity: 0;
+            animation: pulseParticle 6s infinite ease-in-out;
+        }
+
+        /* Particle Positions & Delays */
+        .p1 { top: 15%; left: 20%; animation-delay: 0s; }
+        .p2 { top: 65%; left: 80%; animation-delay: 2s; }
+        .p3 { top: 40%; left: 40%; animation-delay: 4s; }
+        .p4 { top: 85%; left: 15%; animation-delay: 1s; }
+        .p5 { top: 25%; left: 75%; animation-delay: 3s; }
+        .p6 { top: 70%; left: 50%; animation-delay: 5s; }
+
+        /* Keyframes */
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(45deg) translateY(0) translateZ(-200px); }
+            100% { transform: perspective(500px) rotateX(45deg) translateY(60px) translateZ(-200px); }
+        }
+
+        @keyframes flowLight {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10%, 10%) scale(1.1); }
+            100% { transform: translate(-10%, -5%) scale(0.9); }
+        }
+
+        @keyframes pulseParticle {
+            0% { opacity: 0; transform: scale(0.5) translateY(0); }
+            50% { opacity: 0.8; transform: scale(1.5) translateY(-20px); }
+            100% { opacity: 0; transform: scale(0.5) translateY(-40px); }
+        }
+
+        /* --- LAYOUT STRUCTURE --- */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--neon-white);
+            text-decoration: none;
+            display: inline-block;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .logo span {
+            color: var(--neon-yellow);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            font-weight: 300;
+        }
+
+        /* --- BLOG GRID --- */
+        .blog-grid {
+            display: grid;
+            gap: 2.5rem;
+            /* Mobile default: 1 column */
+            grid-template-columns: 1fr; 
+        }
+
+        /* Tablet Layout: 2 columns */
+        @media (min-width: 768px) {
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Desktop Layout: 2 columns (Card + Character) */
+        @media (min-width: 1024px) {
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+                align-items: center; /* Untuk selaraskan kad dan karakter secara menegak */
+            }
+        }
+
+        /* --- CHARACTER & CHAT BUBBLE --- */
+        .character-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .floating-character {
+            max-width: 100%;
+            height: auto;
+            max-height: 400px;
+            animation: floatY 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 234, 0, 0.15));
+            z-index: 1;
+        }
+
+        .chat-wrapper {
+            position: absolute;
+            top: -5%;
+            left: 45%;
+            animation: floatY 4s ease-in-out infinite 0.2s; /* Sedikit delay dari animasi watak */
+            z-index: 2;
+        }
+
+        .chat-bubble {
+            background: #25D366; /* Warna Hijau WhatsApp */
+            color: #ffffff;
+            padding: 14px 24px;
+            border-radius: 20px 20px 20px 0; /* Ekor sembang di kiri bawah */
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+            position: relative;
+            white-space: nowrap; /* Mengelakkan teks terpotong ke bawah */
+        }
+
+        .chat-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            border-width: 15px 15px 0 0;
+            border-style: solid;
+            border-color: #25D366 transparent transparent transparent;
+        }
+
+        @keyframes floatY {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- ARTICLE CARD --- */
+        .blog-card {
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Card Hover Effects */
+        .blog-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--neon-yellow);
+            box-shadow: 
+                0 15px 30px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(255, 234, 0, 0.15),
+                inset 0 0 15px rgba(255, 234, 0, 0.05);
+        }
+
+        .blog-card:hover .card-image img {
+            transform: scale(1.08);
+        }
+
+        .blog-card:hover .read-more {
+            color: var(--neon-yellow);
+            text-shadow: 0 0 8px rgba(255, 234, 0, 0.4);
+            letter-spacing: 2px;
+        }
+
+        .blog-card:hover .read-more::after {
+            width: 100%;
+            background-color: var(--neon-yellow);
+            box-shadow: 0 0 8px var(--neon-yellow);
+        }
+
+        /* Card Image */
+        .card-image {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            filter: brightness(0.8) contrast(1.1);
+        }
+
+        /* Card Content */
+        .card-content {
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--neon-white);
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
+            transition: color 0.3s ease;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            /* Limit to 3 lines */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+
+        /* Read More Button (Text) */
+        .read-more {
+            margin-top: auto;
+            align-self: flex-start;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            position: relative;
+            padding-bottom: 4px;
+            transition: var(--transition);
+        }
+
+        .read-more::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30%;
+            height: 2px;
+            background-color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 4rem;
+        }
+
+        /* --- BACK BUTTON --- */
+        .back-btn {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.6rem 1.2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            background: rgba(15, 15, 15, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            color: var(--neon-yellow);
+            border-color: var(--neon-yellow);
+            background: rgba(255, 234, 0, 0.05);
+            box-shadow: 0 0 15px rgba(255, 234, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .back-btn {
+                top: 1rem;
+                right: 1rem;
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            .container {
+                padding-top: 5rem; /* Memberi ruang agar tidak menabrak logo di mobile */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background Animation Layer -->
+    <div class="bg-container">
+        <div class="bg-grid"></div>
+        <div class="bg-light"></div>
+        <div class="particles-container">
+            <div class="particle p1"></div>
+            <div class="particle p2"></div>
+            <div class="particle p3"></div>
+            <div class="particle p4"></div>
+            <div class="particle p5"></div>
+            <div class="particle p6"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        
+        <a href="/" class="back-btn">Back to Home</a>
+
+        <header>
+            <a href="#" class="logo">Blog<span>.</span></a>
+            <p class="subtitle">Exploring the frontiers of synthetic cognition</p>
+        </header>
+
+        <main class="blog-grid">
+            
+            <!-- Card 1: AI Video -->
+            <a href="Cara-Buat-Video-AI-Malaysia" class="blog-card">
+                <article>
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop" alt="Penyuntingan video digital">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="card-title">Cara Buat Video AI Malaysia: Panduan Lengkap Paling Mudah</h2>
+                        <p class="card-description">Artikel ini akan membimbing anda secara lengkap — dari asas hingga strategi menjana income menggunakan video AI, termasuk peluang membina web app dan menjual produk digital.</p>
+                        <span class="read-more">Baca Lanjut</span>
+                    </div>
+                </article>
+            </a>
+
+            <!-- Character / Mascot Area -->
+            <div class="character-container">
+                <div class="chat-wrapper">
+                    <div class="chat-bubble">Hi, Welcome to my Blog!</div>
+                </div>
+                <img src="https://i.postimg.cc/kG3KKBRr/6208400700279033651-removebg-preview.png" alt="MamatKilat" class="floating-character">
+            </div>
+
+        </main>
+        
+        <footer>
+            <p>&copy; 2026 AI.INSIGHTS. All systems operational.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

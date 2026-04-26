@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MamatKilat | AI Video Creator & System Builder</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Configuration & Custom Styles -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        neon: {
+                            400: '#facc15', // Yellow 400
+                            500: '#eab308', // Yellow 500
+                        },
+                        dark: {
+                            900: '#0a0a0a',
+                            800: '#171717',
+                            700: '#262626'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'data-x': 'dataX 8s linear infinite',
+                        'data-x-reverse': 'dataXReverse 10s linear infinite',
+                        'data-y': 'dataY 12s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        dataX: {
+                            '0%': { transform: 'translateX(-100%)', opacity: '0' },
+                            '20%': { opacity: '1' },
+                            '80%': { opacity: '1' },
+                            '100%': { transform: 'translateX(100vw)', opacity: '0' },
+                        },
+                        dataXReverse: {
+                            '0%': { transform: 'translateX(100vw)', opacity: '0' },
+                            '20%': { opacity: '1' },
+                            '80%': { opacity: '1' },
+                            '100%': { transform: 'translateX(-100%)', opacity: '0' },
+                        },
+                        dataY: {
+                            '0%': { transform: 'translateY(-100%)', opacity: '0' },
+                            '20%': { opacity: '1' },
+                            '80%': { opacity: '1' },
+                            '100%': { transform: 'translateY(100vh)', opacity: '0' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) scale(1)', opacity: '0.3' },
+                            '50%': { transform: 'translateY(-20px) scale(1.5)', opacity: '0.8' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        /* Neon Glow Effects */
+        .neon-text {
+            text-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
+        }
+        
+        .neon-border {
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .neon-border:hover {
+            border-color: rgba(250, 204, 21, 0.8);
+            box-shadow: 0 0 25px rgba(250, 204, 21, 0.15), inset 0 0 10px rgba(250, 204, 21, 0.05);
+            transform: translateY(-5px);
+        }
+
+        /* Red Neon Effects for Problem Section */
+        .neon-text-red {
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+        }
+
+        .neon-border-red {
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .neon-border-red:hover {
+            border-color: rgba(239, 68, 68, 0.8);
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.2), inset 0 0 10px rgba(239, 68, 68, 0.1);
+            transform: translateY(-5px);
+        }
+
+        /* Cyan Neon Effects for Offer 1 */
+        .neon-border-cyan {
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .neon-border-cyan:hover {
+            border-color: rgba(34, 211, 238, 0.8);
+            box-shadow: 0 0 25px rgba(34, 211, 238, 0.25), inset 0 0 10px rgba(34, 211, 238, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .neon-button {
+            background: linear-gradient(90deg, #facc15, #eab308);
+            color: #000;
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .neon-button:hover {
+            box-shadow: 0 0 30px rgba(250, 204, 21, 0.6);
+            transform: scale(1.02);
+        }
+
+        .outline-button {
+            border: 1px solid #facc15;
+            color: #facc15;
+            transition: all 0.3s ease;
+        }
+
+        .outline-button:hover {
+            background: rgba(250, 204, 21, 0.1);
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.2);
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #facc15;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(23, 23, 23, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Luxury Tech Grid */
+        .tech-grid {
+            background-size: 60px 60px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at 50% 50%, black 10%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at 50% 50%, black 10%, transparent 80%);
+        }
+        
+        /* Comet/Data pulse effects */
+        .pulse-line-x {
+            background: linear-gradient(to right, transparent, rgba(250, 204, 21, 0.1) 40%, rgba(250, 204, 21, 0.8) 100%);
+        }
+        .pulse-line-x-reverse {
+            background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0.6) 100%);
+        }
+        .pulse-line-y {
+            background: linear-gradient(to bottom, transparent, rgba(250, 204, 21, 0.1) 40%, rgba(250, 204, 21, 0.8) 100%);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-neon-400 selection:text-black">
+
+    <!-- Luxury AI Background Elements -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none bg-[#030303]">
+        <!-- Subtle Tech Grid -->
+        <div class="absolute inset-0 tech-grid"></div>
+        
+        <!-- Flowing Golden Light (Data Pulses) -->
+        <div class="absolute top-[20%] left-0 w-1/2 h-[1px] pulse-line-x animate-data-x" style="animation-delay: 0s;"></div>
+        <div class="absolute top-[65%] right-0 w-1/2 h-[1px] pulse-line-x-reverse animate-data-x-reverse" style="animation-delay: 2s;"></div>
+        <div class="absolute left-[30%] top-0 w-[1px] h-1/2 pulse-line-y animate-data-y" style="animation-delay: 1s;"></div>
+        <div class="absolute left-[80%] top-0 w-[1px] h-1/2 pulse-line-y animate-data-y" style="animation-delay: 4s;"></div>
+        
+        <!-- Soft Ambient Core Glows -->
+        <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-neon-500/5 rounded-full filter blur-[120px] animate-pulse-slow"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-white/5 rounded-full filter blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-neon-400/5 rounded-full filter blur-[150px]"></div>
+
+        <!-- Glowing Particles -->
+        <div class="absolute top-[15%] left-[20%] w-1.5 h-1.5 bg-neon-400 rounded-full animate-float shadow-[0_0_12px_#facc15]" style="animation-delay: 0s;"></div>
+        <div class="absolute top-[60%] left-[80%] w-1 h-1 bg-white rounded-full animate-float shadow-[0_0_10px_#ffffff]" style="animation-delay: 1.5s;"></div>
+        <div class="absolute top-[80%] left-[30%] w-2 h-2 bg-neon-500 rounded-full animate-float shadow-[0_0_15px_#eab308]" style="animation-delay: 3s;"></div>
+        <div class="absolute top-[35%] left-[75%] w-1 h-1 bg-neon-400 rounded-full animate-float shadow-[0_0_10px_#facc15]" style="animation-delay: 4.5s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="font-display font-bold text-2xl tracking-tighter flex items-center gap-2">
+                <i data-lucide="zap" class="text-neon-400 w-6 h-6"></i>
+                <span>Mamat<span class="text-neon-400">Kilat</span></span>
+            </a>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+                <a href="#about" class="hover:text-neon-400 transition-colors">About</a>
+                <a href="#skills" class="hover:text-neon-400 transition-colors">Systems</a>
+                <a href="#portfolio" class="hover:text-neon-400 transition-colors">Work</a>
+                <a href="#offers" class="hover:text-neon-400 transition-colors">Offers</a>
+                <a href="/Blog/" class="hover:text-neon-400 transition-colors">Blog</a>
+            </div>
+            <a href="#contact" class="hidden md:inline-flex neon-button px-6 py-2.5 rounded-full font-semibold text-sm">
+                Get Started
+            </a>
+            <button class="md:hidden text-white">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        
+        <!-- Right Half Image Background -->
+        <div class="absolute right-0 bottom-0 w-full md:w-[50%] h-[70%] md:h-[95%] z-0 pointer-events-none flex justify-end md:justify-center items-end">
+            <img src="https://i.postimg.cc/kG3KKBRr/6208400700279033651-removebg-preview.png" alt="MamatKilat Hero" class="h-full w-auto object-contain object-bottom opacity-30 md:opacity-100 filter drop-shadow-[0_0_40px_rgba(250,204,21,0.2)] md:translate-x-8">
+            <!-- Fade effect at bottom for seamless blending -->
+            <div class="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#050505] to-transparent"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10 w-full flex flex-col md:flex-row items-center">
+            
+            <!-- Text Content -->
+            <div class="w-full md:w-[65%] text-center md:text-left mt-10 md:mt-0">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-dark-800 border border-white/10 text-sm font-medium mb-8 reveal text-gray-300">
+                    <span class="w-2 h-2 rounded-full bg-neon-400 animate-pulse"></span>
+                    Accepting new clients & students
+                </div>
+                
+                <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 reveal reveal-delay-100">
+                    Automate Your Growth.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-400 to-white neon-text">Dominate with AI.</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto md:mx-0 mb-10 reveal reveal-delay-200">
+                    I build high-converting AI content pipelines and automated business systems for creators and modern brands who want to scale infinitely.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 reveal reveal-delay-300">
+                    <a href="#offers" class="w-full sm:w-auto neon-button px-8 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-2">
+                        Explore My Offers <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#portfolio" class="w-full sm:w-auto outline-button px-8 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-2">
+                        <i data-lucide="play-circle" class="w-5 h-5"></i> View Portfolio
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Empty space on desktop for the image to shine -->
+            <div class="hidden md:block w-[35%]"></div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce opacity-50 z-10">
+            <i data-lucide="chevron-down" class="w-8 h-8 text-neon-400"></i>
+        </div>
+    </section>
+
+    <!-- Problem & Solution Section -->
+    <section class="py-24 bg-dark-900 border-y border-white/5" id="solution">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-stretch">
+                <!-- Problem Card -->
+                <div class="bg-dark-800/40 p-8 md:p-10 rounded-2xl neon-border-red relative reveal flex flex-col justify-center">
+                    <div class="absolute -top-5 -left-5 w-14 h-14 bg-dark-900 rounded-full flex items-center justify-center border border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                        <i data-lucide="x" class="text-red-500 w-6 h-6"></i>
+                    </div>
+                    <h2 class="text-red-500 neon-text-red font-display font-semibold tracking-wider uppercase text-sm mb-3">The Problem</h2>
+                    <h3 class="text-3xl font-display font-bold mb-6 text-white">Disconnected & Manual Workflow</h3>
+                    <p class="text-gray-400 text-lg leading-relaxed">
+                        Anda masih buat semuanya secara manual—dari hasilkan video, urus pelanggan. Tools bersepah, sistem tak tersusun, dan semua bergantung pada masa & tenaga anda sendiri, menyebabkan sukar untuk berkembang dengan konsisten.
+                    </p>
+                </div>
+                
+                <!-- Solution Card -->
+                <div class="bg-dark-800 p-8 md:p-10 rounded-2xl neon-border relative reveal reveal-delay-200 flex flex-col justify-center">
+                    <div class="absolute -top-5 -right-5 w-14 h-14 bg-neon-400 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(250,204,21,0.5)]">
+                        <i data-lucide="check" class="text-black w-7 h-7"></i>
+                    </div>
+                    <h2 class="text-neon-400 font-display font-semibold tracking-wider uppercase text-sm mb-3">The Solution</h2>
+                    <h3 class="text-2xl font-display font-bold mb-6">AI-Powered Digital Ecosystem</h3>
+                    <ul class="space-y-5">
+                        <li class="flex items-start gap-3 text-gray-300 leading-relaxed">
+                            <i data-lucide="video" class="w-6 h-6 text-neon-400 shrink-0 mt-0.5"></i>
+                            <span><strong class="text-white">Video AI:</strong> Gunakan AI untuk hasilkan hook, script, dan struktur video secara automatik tanpa perlu fikir dari kosong.</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-gray-300 leading-relaxed">
+                            <i data-lucide="workflow" class="w-6 h-6 text-neon-400 shrink-0 mt-0.5"></i>
+                            <span><strong class="text-white">System (Automation & Booking):</strong> Bangunkan sistem automasi seperti booking, funnel, dan workflow yang membantu urus pelanggan dari awal hingga selesai dengan lebih teratur.</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-gray-300 leading-relaxed">
+                            <i data-lucide="monitor" class="w-6 h-6 text-neon-400 shrink-0 mt-0.5"></i>
+                            <span><strong class="text-white">Website:</strong> Cipta website sebagai platform untuk perkenalkan servis, kumpul maklumat pelanggan, dan memudahkan orang memahami apa yang anda tawarkan.</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-gray-300 leading-relaxed">
+                            <i data-lucide="app-window" class="w-6 h-6 text-neon-400 shrink-0 mt-0.5"></i>
+                            <span><strong class="text-white">WebApp:</strong> Bina web app sendiri untuk deliver value (contoh: tools, generator, dashboard) dan scale bisnes digital dengan lebih profesional.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-24 relative" id="about">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-5 gap-12 items-center">
+                <div class="md:col-span-2 relative reveal">
+                    <div class="aspect-square rounded-2xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 neon-border bg-dark-800/40">
+                        <!-- MamatKilat Photo -->
+                        <img src="https://i.postimg.cc/kG3KKBRr/6208400700279033651-removebg-preview.png" alt="MamatKilat Portrait" class="w-full h-full object-contain object-bottom pt-4">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-dark-900 border border-white/10 p-4 rounded-xl shadow-2xl z-10">
+                        <p class="font-display font-bold text-xl text-neon-400">MamatKilat</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider">Adam Zakwan</p>
+                    </div>
+                </div>
+                
+                <div class="md:col-span-3 reveal reveal-delay-200">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-6">From Overwhelmed to  <span class="text-neon-400">Automated.</span></h2>
+                    <div class="space-y-6 text-gray-400 text-lg leading-relaxed">
+                        <p>
+                            Hey, I'm <strong class="text-white">MamatKilat</strong>. I help creators, educators, and brands level up fast with AI. Learn to create video AI, build websites, and automate systems like booking platforms and web apps.
+                        </p>
+                        <p>
+                            Stop doing everything manually—turn your ideas into AI-powered systems that save time, scale your content, and grow your digital presence.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills / Systems Section -->
+    <section class="py-24 bg-dark-900 relative border-t border-white/5" id="skills">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+                <h2 class="text-neon-400 font-display font-semibold tracking-wider uppercase text-sm mb-3">Core Arsenal</h2>
+                <h3 class="font-display text-4xl font-bold mb-4">My Superpowers</h3>
+                <p class="text-gray-400">The exact technical skills and methodologies I use to engineer digital dominance.</p>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Skill 1 -->
+                <div class="bg-dark-800 p-8 rounded-2xl neon-border group reveal">
+                    <i data-lucide="video" class="w-10 h-10 text-neon-400 mb-6 group-hover:scale-110 transition-transform duration-300"></i>
+                    <h4 class="text-xl font-display font-bold text-white mb-3">AI Video Gen</h4>
+                    <p class="text-sm text-gray-400">Create videos using Google Flow with a simple and organized workflow.</p>
+                </div>
+                
+                <!-- Skill 2 -->
+                <div class="bg-dark-800 p-8 rounded-2xl neon-border group reveal reveal-delay-100">
+                    <i data-lucide="monitor" class="w-10 h-10 text-neon-400 mb-6 group-hover:scale-110 transition-transform duration-300"></i>
+                    <h4 class="text-xl font-display font-bold text-white mb-3">Website Build</h4>
+                    <p class="text-sm text-gray-400">Designing and developing modern, responsive, and high-converting websites tailored to elevate your brand's digital presence.</p>
+                </div>
+                
+                <!-- Skill 3 -->
+                <div class="bg-dark-800 p-8 rounded-2xl neon-border group reveal reveal-delay-200">
+                    <i data-lucide="server" class="w-10 h-10 text-neon-400 mb-6 group-hover:scale-110 transition-transform duration-300"></i>
+                    <h4 class="text-xl font-display font-bold text-white mb-3">System Build</h4>
+                    <p class="text-sm text-gray-400">Set up structured systems and workflows using automation to help manage tasks like bookings, customer flow, and day-to-day operations more efficiently.</p>
+                </div>
+                
+                <!-- Skill 4 -->
+                <div class="bg-dark-800 p-8 rounded-2xl neon-border group reveal reveal-delay-300">
+                    <i data-lucide="app-window" class="w-10 h-10 text-neon-400 mb-6 group-hover:scale-110 transition-transform duration-300"></i>
+                    <h4 class="text-xl font-display font-bold text-white mb-3">WebApp</h4>
+                    <p class="text-sm text-gray-400">Build custom web applications and simple tools to help organize workflows, deliver value, and support your digital business.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Showcase -->
+    <section class="py-24 relative" id="portfolio">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
+                <div class="max-w-2xl">
+                    <h2 class="text-neon-400 font-display font-semibold tracking-wider uppercase text-sm mb-3">Proof of Work</h2>
+                    <h3 class="font-display text-4xl font-bold mb-4">Systems in Action</h3>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Project 1: Generate Video AI -->
+                <div class="group relative rounded-2xl overflow-hidden neon-border reveal">
+                    <div class="aspect-video bg-dark-800 relative">
+                        <img src="https://i.postimg.cc/MHjYCbDV/Gemini-Generated-Image-1do3fz1do3fz1do3.png" alt="Generate Video AI" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500">
+                        <a href="https://www.tiktok.com/@adam.ai976/video/7612978563112815893?is_from_webapp=1" target="_blank" class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="w-16 h-16 bg-neon-400 rounded-full flex items-center justify-center text-black pl-1 shadow-lg transform scale-0 group-hover:scale-100 transition-transform duration-500 delay-100">
+                                <i data-lucide="play" class="w-6 h-6 fill-current"></i>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="p-6 bg-dark-800">
+                        <div class="flex gap-2 mb-3">
+                            <span class="px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold bg-white/5 text-gray-300 rounded border border-white/10">AI Video</span>
+                        </div>
+                        <h4 class="text-2xl font-display font-bold mb-2">
+                            <a href="https://www.tiktok.com/@adam.ai976/video/7612978563112815893?is_from_webapp=1" target="_blank" class="hover:text-neon-400 transition-colors">Generate Video AI</a>
+                        </h4>
+                        <p class="text-gray-400 text-sm">Create short AI videos with a simple and organized workflow using Google Flow.</p>
+                    </div>
+                </div>
+
+                <!-- Project 2: System Automation -->
+                <div class="group relative rounded-2xl overflow-hidden neon-border reveal reveal-delay-200">
+                    <div class="aspect-video bg-dark-800 relative">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000" alt="System Automation" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <button onclick="openSystemPopup('system')" class="px-6 py-3 bg-white text-black font-bold rounded-full shadow-lg transform scale-0 group-hover:scale-100 transition-transform duration-500 delay-100 flex items-center gap-2 cursor-pointer">
+                                View System
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-dark-800">
+                        <div class="flex gap-2 mb-3">
+                            <span class="px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold bg-white/5 text-gray-300 rounded border border-white/10">System Architecture</span>
+                            <span class="px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold bg-white/5 text-gray-300 rounded border border-white/10">Conversion</span>
+                        </div>
+                        <h4 class="text-2xl font-display font-bold mb-2">
+                            <button onclick="openSystemPopup('system')" class="hover:text-neon-400 transition-colors text-left">System Automation</button>
+                        </h4>
+                        <p class="text-gray-400 text-sm">Setting up automated systems to support business operations and reduce manual tasks.</p>
+                    </div>
+                </div>
+
+                <!-- Project 3: Website -->
+                <div class="group relative rounded-2xl overflow-hidden neon-border reveal">
+                    <div class="aspect-video bg-dark-800 relative">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000" alt="Website Project" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <a href="#" class="px-6 py-3 bg-white text-black font-bold rounded-full shadow-lg transform scale-0 group-hover:scale-100 transition-transform duration-500 delay-100 flex items-center gap-2">
+                                <i data-lucide="external-link" class="w-4 h-4"></i> Explore Site
+                            </a>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-dark-800">
+                        <div class="flex gap-2 mb-3">
+                            <span class="px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold bg-white/5 text-gray-300 rounded border border-white/10">UI/UX</span>
+                            <span class="px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold bg-white/5 text-gray-300 rounded border border-white/10">Web Dev</span>
+                        </div>
+                        <h4 class="text-2xl font-display font-bold mb-2">Website</h4>
+                        <p class="text-gray-400 text-sm">Build custom websites with clean design, smooth interactions, and a structured layout to present your brand and information clearly.</p>
+                    </div>
+                </div>
+
+                <!-- Project 4: WebApp -->
+                <div class="group relative rounded-2xl overflow-hidden neon-border reveal reveal-delay-200">
+                    <div class="aspect-video bg-dark-800 relative">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1000" alt="WebApp Project" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <button onclick="openSystemPopup('webapp')" class="px-6 py-3 bg-neon-400 text-black font-bold rounded-full shadow-lg transform scale-0 group-hover:scale-100 transition-transform duration-500 delay-100 flex items-center gap-2 cursor-pointer">
+                                <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Open App
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-dark-800">
+                        <div class="flex gap-2 mb-3">
+                            <span class="px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold bg-white/5 text-gray-300 rounded border border-white/10">Fullstack</span>
+                        </div>
+                        <h4 class="text-2xl font-display font-bold mb-2">
+                            <button onclick="openSystemPopup('webapp')" class="hover:text-neon-400 transition-colors text-left">WebApp</button>
+                        </h4>
+                        <p class="text-gray-400 text-sm">Build dashboards and tools to generate, organize, and manage content or prompts efficiently in one central platform.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Offers Section -->
+    <section class="py-24 bg-dark-900 border-y border-white/5" id="offers">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
+                <div class="max-w-2xl">
+                    <h2 class="text-neon-400 font-display font-semibold tracking-wider uppercase text-sm mb-3">Build, Learn & Create</h2>
+                    <h3 class="font-display text-4xl font-bold mb-4">Choose Your Path</h3>
+                    <p class="text-gray-400">Whether you want to attend face-to-face classes to master AI video creation, or have me build your website, system automation, or web app, there’s a solution designed to fit your needs and help you grow your business.</p>
+                </div>
+                <a href="https://www.tiktok.com/link/v2?aid=1988&lang=en&scene=bio_url&target=https%3A%2F%2Flinktr.ee%2Fmamatkilat" target="_blank" class="group text-neon-400 hover:text-white font-medium flex items-center gap-2 transition-colors mt-6 md:mt-0 whitespace-nowrap">
+                   Product digital <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Offer 1 -->
+                <div class="bg-dark-800 p-8 rounded-3xl neon-border-cyan flex flex-col relative reveal">
+                    <div class="absolute top-0 right-8 transform -translate-y-1/2 z-10">
+                        <span class="bg-cyan-400 text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-[0_0_20px_rgba(34,211,238,0.6)] border border-cyan-300">Suitable for company</span>
+                    </div>
+                    <div class="mb-6">
+                        <div class="w-12 h-12 bg-cyan-400/10 rounded-xl flex items-center justify-center mb-4 border border-cyan-400/20">
+                            <i data-lucide="book-open" class="text-cyan-400 w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-2xl font-display font-bold text-white mb-2">The AI Creator Class for Beginners</h4>
+                        <p class="text-gray-400 text-sm">A beginner-friendly, hands-on class where you’ll learn to create your first AI videos and simple content pipelines step by step. Each session accommodates 20–30 participants, ensuring personalized attention and an interactive learning experience.</p>
+                    </div>
+                    <div class="mt-auto">
+                        <div class="text-3xl font-display font-bold mb-6">Rm 250 <span class="text-sm font-normal text-gray-500">/ person</span></div>
+                        <a href="https://wa.me/601124072661?text=Hi%20Mamat%2C%20saya%20berminat%20tentang%20The%20AI%20Creator%20Class%20for%20Beginners" target="_blank" class="w-full block text-center border border-cyan-400/30 hover:border-cyan-400 text-cyan-400 font-semibold py-3 rounded-xl transition-all flex justify-center items-center gap-2 hover:bg-cyan-400/10 hover:shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+                            WhatsApp Sekarang <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Offer 2 -->
+                <div class="bg-gradient-to-b from-dark-800 to-dark-900 p-8 rounded-3xl neon-border transform lg:-translate-y-4 shadow-[0_20px_40px_rgba(0,0,0,0.5)] flex flex-col relative reveal reveal-delay-100 z-10">
+                    <div class="absolute top-0 right-8 transform -translate-y-1/2">
+                        <span class="bg-neon-400 text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Best Path</span>
+                    </div>
+                    <div class="mb-6">
+                        <div class="w-12 h-12 bg-neon-400/10 rounded-xl flex items-center justify-center mb-4 border border-neon-400/20">
+                            <i data-lucide="zap" class="text-neon-400 w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-2xl font-display font-bold text-white mb-2">Done-For-You System</h4>
+                        <p class="text-gray-400 text-sm">I’ll step into your business to audit your processes and build a streamlined automation system tailored to your needs. This package includes:</p>
+                        
+                        <ul class="mt-6 space-y-3">
+                            <li class="flex items-center gap-2 text-sm text-gray-300">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-neon-400"></i> System Setup
+                            </li>
+                            <li class="flex items-center gap-2 text-sm text-gray-300">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-neon-400"></i> Full Automation
+                            </li>
+                            <li class="flex items-center gap-2 text-sm text-gray-300">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-neon-400"></i> 1-on-1 Guidance
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-auto">
+                        <div class="text-3xl font-display font-bold mb-6">Custom <span class="text-sm font-normal text-gray-500">/ project</span></div>
+                        <a href="https://wa.me/601124072661?text=Hi%20Mamat%2C%20saya%20berminat%20tentang%20Done-For-You%20System" target="_blank" class="w-full block text-center neon-button text-black font-bold py-3 rounded-xl transition-all flex justify-center items-center gap-2">
+                            WhatsApp Sekarang <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Offer 3 -->
+                <div class="bg-dark-800 p-8 rounded-3xl border border-white/10 flex flex-col relative reveal reveal-delay-200">
+                    <div class="mb-6">
+                        <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4 border border-white/10">
+                            <i data-lucide="package" class="text-white w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-2xl font-display font-bold text-white mb-2">Website</h4>
+                        <p class="text-gray-400 text-sm">I create custom websites that showcase your brand, highlight your services or products, and provide a smooth user experience. Each website is designed to be visually appealing, easy to navigate, and ready to support your business goals.</p>
+                        
+                        <ul class="mt-6 space-y-3">
+                            <li class="flex items-center gap-2 text-sm text-gray-300">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-neon-400"></i> SEO
+                            </li>
+                            <li class="flex items-center gap-2 text-sm text-gray-300">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-neon-400"></i> Domain / Use your domain
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-auto">
+                        <div class="text-3xl font-display font-bold mb-6">Rm 450 <span class="text-sm font-normal text-gray-500">/ website</span></div>
+                        <a href="https://wa.me/601124072661?text=Hi%20Mamat%2C%20saya%20berminat%20tentang%20Website" target="_blank" class="w-full block text-center border border-white/20 hover:border-white text-white font-semibold py-3 rounded-xl transition-all flex justify-center items-center gap-2">
+                            WhatsApp Sekarang <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Offer 4: WebApp -->
+                <div class="bg-dark-800 p-8 rounded-3xl border border-white/10 flex flex-col relative reveal reveal-delay-300">
+                    <div class="mb-6">
+                        <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4 border border-white/10">
+                            <i data-lucide="app-window" class="text-white w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-2xl font-display font-bold text-white mb-2">WebApp</h4>
+                        <p class="text-gray-400 text-sm">Build custom web applications and simple tools to help organize workflows, deliver value, and support your digital business.</p>
+                    </div>
+                    <div class="mt-auto">
+                        <div class="text-3xl font-display font-bold mb-6">Custom <span class="text-sm font-normal text-gray-500">/ project</span></div>
+                        <a href="https://wa.me/601124072661?text=Hi%20Mamat%2C%20saya%20berminat%20tentang%20WebApp" target="_blank" class="w-full block text-center border border-white/20 hover:border-white text-white font-semibold py-3 rounded-xl transition-all flex justify-center items-center gap-2">
+                            WhatsApp Sekarang <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Offer 5: Pakej Panduan Belajar Video AI -->
+                <div class="bg-dark-800 p-8 rounded-3xl border border-white/10 flex flex-col relative reveal reveal-delay-200">
+                    <div class="mb-6">
+                        <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4 border border-white/10">
+                            <i data-lucide="clapperboard" class="text-white w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-2xl font-display font-bold text-white mb-2">Pakej Panduan Belajar Video AI</h4>
+                        
+                        <ul class="mt-6 space-y-4">
+                            <li class="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-neon-400 shrink-0"></i> 
+                                <span>Beginners just starting to learn AI video creation.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-neon-400 shrink-0"></i> 
+                                <span>Content creators looking to upgrade their digital skills.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-neon-400 shrink-0"></i> 
+                                <span>Anyone who wants to produce engaging videos without needing to be a technical expert.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-auto pt-8">
+                        <div class="text-3xl font-display font-bold mb-6">Digital <span class="text-sm font-normal text-gray-500">/ guide</span></div>
+                        <a href="https://toyyibpay.com/KIT-CARA-BUAT-VIDEO-AIBEGINNER" target="_blank" class="w-full block text-center border border-white/20 hover:border-white text-white font-semibold py-3 rounded-xl transition-all flex justify-center items-center gap-2">
+                            Dapatkan Sekarang <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-24 relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute right-0 top-1/2 w-96 h-96 bg-neon-400/5 rounded-full filter blur-[100px] pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="font-display text-4xl font-bold text-center mb-16 reveal">See What Others Are Saying</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="p-8 bg-dark-800 rounded-2xl border border-white/5 relative reveal">
+                    <i data-lucide="quote" class="absolute top-6 right-6 w-8 h-8 text-white/5"></i>
+                    <p class="text-gray-300 mb-6 italic text-lg leading-relaxed">
+                       "amat berbantuu dari saya tak tau pape , sampaikan saya da bole buat 7 content dalam masa sehari untuk assignment😍"
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-700 rounded-full overflow-hidden">
+                            <img src="https://ui-avatars.com/api/?name=nrai+syah&background=262626&color=fff" alt="Avatar" class="w-full h-full">
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-white">nraisyah</h5>
+                            <p class="text-sm text-neon-400">Student (Learn Video AI)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="p-8 bg-dark-800 rounded-2xl border border-white/5 relative reveal reveal-delay-200">
+                    <i data-lucide="quote" class="absolute top-6 right-6 w-8 h-8 text-white/5"></i>
+                    <p class="text-gray-300 mb-6 italic text-lg leading-relaxed">
+                        "Suka rse,jd jugak buat vdeo nmpk real..hihihi."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-700 rounded-full overflow-hidden">
+                            <img src="https://ui-avatars.com/api/?name=Aqilah+Zukefly&background=262626&color=fff" alt="Avatar" class="w-full h-full">
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-white">Aqilah Zukefly</h5>
+                            <p class="text-sm text-neon-400">Student (Learn Video AI)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-black pt-24 pb-12" id="contact">
+        <div class="max-w-4xl mx-auto px-6 text-center mb-24 reveal">
+            <h2 class="font-display text-5xl md:text-6xl font-bold mb-6">Ready to Scale Your Digital Empire?</h2>
+            <p class="text-xl text-gray-400 mb-10">Dari menguasai Video AI, membina Website profesional, hinggalah ke Sistem Automasi perniagaan. Biar saya bantu anda meroketkan jenama dan jimatkan masa anda dengan teknologi yang betul.</p>
+            <a href="#offers" class="inline-flex neon-button px-10 py-5 rounded-full font-bold text-xl items-center gap-3">
+                <i data-lucide="arrow-up-circle" class="w-6 h-6"></i> Get Started
+            </a>
+            <p class="mt-6 text-sm text-gray-500">Now open for bookings and upcoming classes.</p>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center border-t border-white/10 pt-8 gap-4">
+            <div class="flex items-center gap-2 font-display font-bold text-xl">
+                <i data-lucide="zap" class="text-neon-400 w-5 h-5"></i> MamatKilat
+            </div>
+            
+            <div class="flex gap-6 text-gray-400">
+                <a href="#" class="hover:text-neon-400 transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                <a href="#" class="hover:text-neon-400 transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                <a href="#" class="hover:text-neon-400 transition-colors"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                <a href="#" class="hover:text-neon-400 transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+            </div>
+            
+            <div class="text-sm text-gray-600">
+                &copy; <span id="year"></span> MamatKilat. All systems operational.
+            </div>
+        </div>
+    </footer>
+
+    <!-- System Automation & WebApp Popup Modal (Dynamic) -->
+    <div id="system-popup" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity">
+        <div class="bg-dark-900 border border-white/10 rounded-2xl p-6 shadow-2xl w-full max-w-sm relative neon-border">
+            <button onclick="document.getElementById('system-popup').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h3 id="popup-title" class="text-xl font-display font-bold text-white mb-5 flex items-center gap-2">
+                <i data-lucide="server" class="text-neon-400 w-5 h-5"></i>
+                Demo Sistem
+            </h3>
+            <div class="space-y-3">
+                <a href="https://sites.google.com/view/demowebappsystem-mamatkilat/system-booking?authuser=0" target="_blank" class="block w-full text-left px-5 py-4 bg-dark-800 border border-white/5 hover:border-neon-400 text-gray-200 hover:text-neon-400 rounded-xl transition-all font-medium group">
+                    <div class="flex justify-between items-center">
+                        <span id="popup-btn-text" class="font-bold text-sm tracking-wide">VIEW DEMO SYSTEM/WEBAPP</span>
+                        <i data-lucide="external-link" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hire Me Popup Form -->
+    <div id="hire-popup" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity">
+        <div class="bg-dark-900 border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl w-full max-w-md relative neon-border">
+            <button onclick="document.getElementById('hire-popup').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h3 class="text-2xl font-display font-bold text-white mb-2">Let's Work Together</h3>
+            <p class="text-gray-400 text-sm mb-6">Isi butiran di bawah dan saya akan hubungi anda segera.</p>
+            
+            <form action="https://formsubmit.co/aebay210@gmail.com" method="POST" class="space-y-4">
+                <input type="hidden" name="_captcha" value="false">
+                
+                <div>
+                    <label for="nama" class="block text-sm font-medium text-gray-300 mb-1">Nama</label>
+                    <input type="text" id="nama" name="Nama" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-400 focus:ring-1 focus:ring-neon-400 transition-colors" placeholder="Nama anda">
+                </div>
+                <div>
+                    <label for="tel" class="block text-sm font-medium text-gray-300 mb-1">No. Tel</label>
+                    <input type="tel" id="tel" name="No_Tel" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-400 focus:ring-1 focus:ring-neon-400 transition-colors" placeholder="Contoh: 0123456789">
+                </div>
+                <div>
+                    <label for="mesej" class="block text-sm font-medium text-gray-300 mb-1">Mesej</label>
+                    <textarea id="mesej" name="Mesej" required rows="4" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-400 focus:ring-1 focus:ring-neon-400 transition-colors resize-none" placeholder="Ceritakan sedikit tentang projek anda..."></textarea>
+                </div>
+                <button type="submit" class="w-full neon-button text-black font-bold py-3 rounded-xl transition-all mt-2 flex justify-center items-center gap-2">
+                    Hantar Mesej <i data-lucide="send" class="w-5 h-5"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Widget -->
+    <div id="wa-wrapper" class="fixed bottom-6 right-6 z-[100] touch-none flex flex-col items-end">
+        <div id="wa-popup" class="hidden absolute bottom-[80px] right-0 w-72 bg-dark-900 border border-white/10 rounded-2xl p-5 shadow-[0_10px_40px_rgba(0,0,0,0.8)] neon-border origin-bottom-right transition-all">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-neon-400 animate-pulse"></div>
+                    <h4 class="text-white font-bold text-sm">Ada yang boleh dibantu?</h4>
+                </div>
+                <button id="wa-close" class="text-gray-400 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <p class="text-xs text-gray-400 mb-4">Pilih topik yang anda berminat di bawah:</p>
+            <div class="space-y-2">
+                <button class="wa-option w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-black hover:bg-neon-400 rounded-xl transition-all font-medium" data-msg="CLASS FACE TO FACE (BELAJAR CARA BUAT VIDEO AI)">
+                    Class Face to Face (Video AI)
+                </button>
+                <button class="wa-option w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-black hover:bg-neon-400 rounded-xl transition-all font-medium" data-msg="SISTEM">
+                    Sistem
+                </button>
+                <button class="wa-option w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-black hover:bg-neon-400 rounded-xl transition-all font-medium" data-msg="Website">
+                    Website
+                </button>
+                <button class="wa-option w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-black hover:bg-neon-400 rounded-xl transition-all font-medium" data-msg="WebApp">
+                    WebApp
+                </button>
+                <button class="wa-option w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-black hover:bg-neon-400 rounded-xl transition-all font-medium" data-msg="Lain-lain">
+                    Lain-lain
+                </button>
+            </div>
+        </div>
+
+        <div id="wa-btn" class="w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:scale-105 transition-transform relative z-10 group">
+            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="currentColor" class="text-white ml-0.5 mt-0.5" viewBox="0 0 16 16">
+              <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c-.003 1.396.366 2.76 1.062 3.961L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+            </svg>
+            <div class="absolute right-20 bg-dark-900 border border-white/10 text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                WhatsApp Kami
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Init Icons
+        lucide.createIcons();
+
+        // Footer Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Reveal Animations
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if(entry.target.classList.contains('reveal-delay-100')) {
+                        setTimeout(() => entry.target.classList.add('active'), 100);
+                    } else if(entry.target.classList.contains('reveal-delay-200')) {
+                        setTimeout(() => entry.target.classList.add('active'), 200);
+                    } else if(entry.target.classList.contains('reveal-delay-300')) {
+                        setTimeout(() => entry.target.classList.add('active'), 300);
+                    } else {
+                        entry.target.classList.add('active');
+                    }
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, revealOptions);
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // --- System/WebApp Popup Logic ---
+        function openSystemPopup(type) {
+            const title = document.getElementById('popup-title');
+            const btnText = document.getElementById('popup-btn-text');
+            const popup = document.getElementById('system-popup');
+            
+            if (type === 'webapp') {
+                title.innerHTML = '<i data-lucide="app-window" class="text-neon-400 w-5 h-5"></i> Demo WebApp';
+                btnText.innerText = 'VIEW DEMO WEBAPP';
+            } else {
+                title.innerHTML = '<i data-lucide="server" class="text-neon-400 w-5 h-5"></i> Demo Sistem';
+                btnText.innerText = 'VIEW DEMO SYSTEM';
+            }
+            
+            lucide.createIcons(); // Refresh icons after injecting HTML
+            popup.classList.remove('hidden');
+        }
+
+        // --- WhatsApp Widget Drag & Drop Logic ---
+        const waWrapper = document.getElementById('wa-wrapper');
+        const waBtn = document.getElementById('wa-btn');
+        const waPopup = document.getElementById('wa-popup');
+        
+        let isDragging = false;
+        let currentX = 0, currentY = 0, initialX = 0, initialY = 0, xOffset = 0, yOffset = 0;
+
+        waBtn.addEventListener('mousedown', dragStart);
+        waBtn.addEventListener('touchstart', dragStart, {passive: true});
+
+        function dragStart(e) {
+            if (e.type === "touchstart") {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
+            isDragging = false; 
+
+            document.addEventListener("mousemove", drag);
+            document.addEventListener("touchmove", drag, { passive: false });
+            document.addEventListener("mouseup", dragEnd);
+            document.addEventListener("touchend", dragEnd);
+        }
+
+        function drag(e) {
+            let cx, cy;
+            if (e.type === "touchmove") {
+                cx = e.touches[0].clientX;
+                cy = e.touches[0].clientY;
+            } else {
+                cx = e.clientX;
+                cy = e.clientY;
+            }
+
+            if (Math.abs(cx - initialX - xOffset) > 5 || Math.abs(cy - initialY - yOffset) > 5) {
+                isDragging = true;
+                if (e.cancelable) e.preventDefault(); 
+            }
+
+            if (isDragging) {
+                currentX = cx - initialX;
+                currentY = cy - initialY;
+                xOffset = currentX;
+                yOffset = currentY;
+                waWrapper.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+            }
+        }
+
+        function dragEnd(e) {
+            document.removeEventListener("mousemove", drag);
+            document.removeEventListener("touchmove", drag);
+            document.removeEventListener("mouseup", dragEnd);
+            document.removeEventListener("touchend", dragEnd);
+
+            if (!isDragging) {
+                waPopup.classList.toggle('hidden');
+            }
+        }
+
+        // WhatsApp Custom Messages Logic
+        document.querySelectorAll('.wa-option').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const choice = btn.getAttribute('data-msg');
+                const phone = '601124072661'; 
+                const text = encodeURIComponent(`Hi Mamat, saya nak tanya tentang ${choice}.`);
+                window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+                waPopup.classList.add('hidden');
+            });
+        });
+
+        // Close WA Popup Button
+        document.getElementById('wa-close').addEventListener('click', () => {
+            waPopup.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
